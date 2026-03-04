@@ -109,6 +109,7 @@ func (p *Global) SetPkgName(pkg *packages.Package, pkgDeclaration *ast.File) {
 			}),
 			Documentation: []string{},
 			Relationships: []*scip.Relationship{},
+			Kind:          scip.SymbolInformation_Package,
 		},
 		Pos: pkgDeclaration.Name.NamePos,
 	}

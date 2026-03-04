@@ -103,10 +103,18 @@ func (d *Document) SetNewSymbolForPos(
 		}
 	}
 
+	var kind scip.SymbolInformation_Kind
+	if ident != nil {
+		if def := d.pkg.TypesInfo.Defs[ident]; def != nil {
+			kind = KindForObject(def)
+		}
+	}
+
 	d.pkgSymbols.Set(pos, &scip.SymbolInformation{
 		Symbol:        symbol,
 		Documentation: documentation,
 		Relationships: []*scip.Relationship{},
+		Kind:          kind,
 	})
 }
 
