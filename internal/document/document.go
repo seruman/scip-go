@@ -107,11 +107,27 @@ func (d *Document) SetNewSymbolForPos(
 	if ident != nil {
 		if def := d.pkg.TypesInfo.Defs[ident]; def != nil {
 			kind = KindForObject(def)
+		} else if obj := d.pkg.TypesInfo.ObjectOf(ident); obj != nil {
+			kind = KindForObject(obj)
+		} else if _, ok := parent.(*ast.File); ok {
+			kind = scip.SymbolInformation_Package
+		}
+	}
+
+	var displayName string
+	if ident != nil {
+		if def := d.pkg.TypesInfo.Defs[ident]; def != nil {
+			displayName = def.Name()
+		} else if obj := d.pkg.TypesInfo.ObjectOf(ident); obj != nil {
+			displayName = obj.Name()
+		} else {
+			displayName = ident.Name
 		}
 	}
 
 	d.pkgSymbols.Set(pos, &scip.SymbolInformation{
 		Symbol:        symbol,
+		DisplayName:   displayName,
 		Documentation: documentation,
 		Relationships: []*scip.Relationship{},
 		Kind:          kind,
